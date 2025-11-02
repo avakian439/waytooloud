@@ -42,6 +42,7 @@
       "dist-electron",
       "dist-react"
     ],
+    "extraResources": ["dist-electron/preload.cjs", "./desktopIcon.png"],
     "icon": "./desktopIcon.png",
     "win": {
       "target": [

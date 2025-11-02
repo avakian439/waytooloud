@@ -30,6 +30,38 @@ body {
   min-height: 100vh;
 }
 
+#root {
+  width: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.demo-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 8px;
+  width: 95%;
+}
+
+.button-container {
+  margin-bottom: 20px;
+}
+
+.limits-container {
+  width: 100%;
+}
+
+.no-limits-message {
+  text-align: center;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
