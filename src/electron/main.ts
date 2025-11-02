@@ -1,11 +1,16 @@
-import {app, BrowserWindow, ipcMain, dialog, protocol} from 'electron';
+import {app, BrowserWindow, ipcMain, dialog, protocol, Tray, Menu} from 'electron';
 import path from 'path';
 import fs from 'fs/promises';
 import { isDevMode } from './util.js';
 import { getPreloadPath } from './pathresolver.js';
+import { initAudioCapture } from './audiocapture.js';
 
 const LIMITS_FILE = path.join(app.getPath('userData'), 'limits.json');
 const SOUNDS_DIR = path.join(app.getPath('userData'), 'sounds');
+
+let tray: Tray | null = null;
+let mainWindow: BrowserWindow | null = null;
+let isQuitting = false;
 
 // Register custom protocol before app is ready
 app.whenReady().then(() => {
@@ -17,12 +22,58 @@ app.whenReady().then(() => {
   });
 });
 
+function createTray(iconPath: string) {
+  tray = new Tray(iconPath);
+  
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show App',
+      click: () => {
+        if (mainWindow) {
+          mainWindow.show();
+          mainWindow.focus();
+        }
+      }
+    },
+    {
+      label: 'Hide to Tray',
+      click: () => {
+        if (mainWindow) {
+          mainWindow.hide();
+        }
+      }
+    },
+    { type: 'separator' },
+    {
+      label: 'Quit',
+      click: () => {
+        app.quit();
+      }
+    }
+  ]);
+  
+  tray.setToolTip('WayTooLoud - Audio Monitor');
+  tray.setContextMenu(contextMenu);
+  
+  // Double-click to show/hide window
+  tray.on('double-click', () => {
+    if (mainWindow) {
+      if (mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else {
+        mainWindow.show();
+        mainWindow.focus();
+      }
+    }
+  });
+}
+
 app.on('ready', () => {
   const iconPath = isDevMode() 
     ? path.join(app.getAppPath(), 'desktopIcon.png')
     : path.join(app.getAppPath(), '..', 'desktopIcon.png');
 
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     icon: iconPath,
     webPreferences: {
       preload: getPreloadPath(),
@@ -30,11 +81,30 @@ app.on('ready', () => {
     }
   });
   
+  // Create system tray icon
+  createTray(iconPath);
+  
+  // Prevent app from closing when window is closed, just hide it
+  mainWindow.on('close', (event) => {
+    if (!isQuitting) {
+      event.preventDefault();
+      mainWindow?.hide();
+    }
+  });
+  
+  // Initialize audio capture handlers
+  initAudioCapture(mainWindow);
+  
   if (isDevMode()) {
     mainWindow.loadURL('http://localhost:3000');
   } else {
     mainWindow.loadFile(path.join(app.getAppPath(), 'dist-react/index.html'));
   }
+});
+
+// Handle app quit
+app.on('before-quit', () => {
+  isQuitting = true;
 });
 
 // IPC handlers for limit data

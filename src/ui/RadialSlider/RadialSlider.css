@@ -1,0 +1,96 @@
+.radial-slider-container {
+    position: relative;
+    display: inline-block;
+    user-select: none;
+    padding: 10px; /* Add padding to prevent handle cutoff at corners */
+}
+
+.radial-slider-svg {
+    display: block;
+    transform: rotate(-90deg); /* Rotate so 0 degrees is at the top */
+    overflow: visible; /* Ensure handle isn't clipped */
+}
+
+.radial-slider-handle {
+    cursor: grab;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: r 0.1s ease;
+}
+
+.radial-slider-handle:hover {
+    r: 14;
+}
+
+.radial-slider-handle:active {
+    cursor: grabbing;
+}
+
+.radial-slider-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: auto; /* Allow clicks on buttons */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.value-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.value-number {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+}
+
+.value-label {
+    display: block;
+    font-size: 10px;
+    color: #888;
+    margin-top: 2px;
+}
+
+/* Increment/Decrement buttons inside the ring */
+.radial-slider-controls {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+}
+
+.radial-slider-btn {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    background-color: #1a1a1a;
+    color: #aaa;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.15s ease;
+    line-height: 1;
+}
+
+.radial-slider-btn:hover {
+    background-color: #2a2a2a;
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
+.radial-slider-btn:active {
+    background-color: #4caf50;
+    color: #fff;
+    transform: scale(0.9);
+}

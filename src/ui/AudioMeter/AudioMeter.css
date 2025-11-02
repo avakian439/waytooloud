@@ -43,8 +43,51 @@
     top: 0;
     left: 0;
     height: 100%;
-    transition: width 0.1s ease-out, background-color 0.2s ease;
+    transition: width 0.05s linear, background-color 0.15s ease;
     box-shadow: 2px 0 8px rgba(255, 255, 255, 0.3);
+    will-change: width;
+    transform: translateZ(0); /* Force GPU acceleration */
+    backface-visibility: hidden; /* Optimize rendering */
+}
+
+/* Peak indicator - thin vertical line showing highest level in time window */
+.audio-meter-peak {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #ff3333;
+    box-shadow: 0 0 8px rgba(255, 51, 51, 0.8), 0 0 4px rgba(255, 51, 51, 0.6);
+    transform: translateX(-1px) translateZ(0); /* Center the line and force GPU acceleration */
+    transition: left 0.3s ease-out;
+    z-index: 10;
+    pointer-events: none;
+    will-change: left;
+    backface-visibility: hidden;
+}
+
+.audio-meter-peak::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -2px;
+    width: 6px;
+    height: 6px;
+    background-color: #ff3333;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255, 51, 51, 0.9);
+}
+
+.audio-meter-peak::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: -2px;
+    width: 6px;
+    height: 6px;
+    background-color: #ff3333;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255, 51, 51, 0.9);
 }
 
 .audio-meter-graduations {

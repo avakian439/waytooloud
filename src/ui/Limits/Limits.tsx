@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import "./Limits.css";
+import RadialSlider from "../RadialSlider/RadialSlider";
 
 interface LimitsProps {
     limitData: LimitData;
@@ -7,7 +8,7 @@ interface LimitsProps {
     onDelete: (limitId: string) => void;
 }
 
-function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
+const Limits = memo(function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
     const [limitName, setLimitName] = useState(limitData.name);
     const [limitActive, setLimitActive] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +16,7 @@ function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
     const [limitTimeframeTo, setLimitTimeframeTo] = useState(limitData.timeframeTo);
     const [limitWeekdays, setLimitWeekdays] = useState<string[]>(limitData.weekdays);
     const [limitSoundFile, setLimitSoundFile] = useState<string>(limitData.soundFile);
+    const [limitDbThreshold, setLimitDbThreshold] = useState<number>(limitData.dbThreshold ?? 70);
 
     // Check if limit is currently active based on time and weekday
     const checkLimitActive = useCallback(() => {
@@ -69,6 +71,7 @@ function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
     const [editTimeframeTo, setEditTimeframeTo] = useState(limitTimeframeTo);
     const [editWeekdays, setEditWeekdays] = useState<string[]>(limitWeekdays);
     const [editSoundFile, setEditSoundFile] = useState<string>(limitSoundFile);
+    const [editDbThreshold, setEditDbThreshold] = useState<number>(limitDbThreshold);
 
     const handleEditClick = () => {
         setEditName(limitName);
@@ -76,6 +79,7 @@ function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
         setEditTimeframeTo(limitTimeframeTo);
         setEditWeekdays(limitWeekdays);
         setEditSoundFile(limitSoundFile);
+        setEditDbThreshold(limitDbThreshold);
         setIsModalOpen(true);
     };
 
@@ -85,6 +89,7 @@ function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
         setLimitTimeframeTo(editTimeframeTo);
         setLimitWeekdays(editWeekdays);
         setLimitSoundFile(editSoundFile);
+        setLimitDbThreshold(editDbThreshold);
 
         // Call parent update callback
         const updatedLimit: LimitData = {
@@ -93,7 +98,8 @@ function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
             timeframeFrom: editTimeframeFrom,
             timeframeTo: editTimeframeTo,
             weekdays: editWeekdays,
-            soundFile: editSoundFile
+            soundFile: editSoundFile,
+            dbThreshold: editDbThreshold
         };
         console.log('Updating limit:', updatedLimit);
         onUpdate(updatedLimit);
@@ -186,14 +192,24 @@ function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <h2>Edit Limit</h2>
                         
-                        <div className="form-group">
-                            <label htmlFor="limit-name">Limit Name:</label>
-                            <input
-                                type="text"
-                                id="limit-name"
-                                value={editName}
-                                onChange={(e) => setEditName(e.target.value)}
-                            />
+                        <div className="form-group-flex">
+                            <div className="form-group-name">
+                                <label htmlFor="limit-name">Limit Name:</label>
+                                <input
+                                    type="text"
+                                    id="limit-name"
+                                    value={editName}
+                                    onChange={(e) => setEditName(e.target.value)}
+                                />
+                            </div>
+                            <div className="form-group-radial">
+                                <RadialSlider
+                                    value={editDbThreshold}
+                                    onChange={setEditDbThreshold}
+                                    size={100}
+                                    label="dB"
+                                />
+                            </div>
                         </div>
                         <hr></hr>
                         <div className="form-group">
@@ -279,6 +295,6 @@ function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
             )}
         </div>
     );
-}
+});
 
 export default Limits;

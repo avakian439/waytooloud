@@ -3,10 +3,16 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import Limits from './Limits/Limits.tsx'
 import AudioMeter from './AudioMeter/AudioMeter.tsx'
+import { useAudioMonitoring } from './hooks/useAudioMonitoring.ts'
+import { useLimitMonitor } from './hooks/useLimitMonitor.ts'
 
 export function App() {
   const [limits, setLimits] = useState<LimitData[]>([]);
   const [loading, setLoading] = useState(true);
+  const { audioLevel, startMonitoring } = useAudioMonitoring();
+
+  // Monitor limits and trigger sounds when thresholds are exceeded
+  useLimitMonitor({ limits, audioLevel });
 
   useEffect(() => {
     const loadLimits = async () => {
@@ -26,6 +32,12 @@ export function App() {
       setLoading(false);
     };
     loadLimits();
+  }, []);
+
+  // Auto-start audio monitoring when app loads
+  useEffect(() => {
+    startMonitoring();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateLimit = async (updatedLimit: LimitData) => {
@@ -57,7 +69,8 @@ export function App() {
       timeframeFrom: '09:00',
       timeframeTo: '17:00',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-      soundFile: ''
+      soundFile: '',
+      dbThreshold: 70
     };
     
     const updatedLimits = [...limits, newLimit];
@@ -75,9 +88,9 @@ export function App() {
 
   return (
     <div className="app-container">
-      {/* Audio Meter Demo */}
+      {/* Audio Meter with Microphone Input */}
       <div className="demo-section">
-        <AudioMeter level={60} width="100%" height="20px" showDebugSlider={true} />
+        <AudioMeter level={audioLevel} width="100%" height="20px" />
       </div>
       
       <div className="button-container">
