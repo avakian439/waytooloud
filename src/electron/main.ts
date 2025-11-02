@@ -4,7 +4,14 @@ import fs from 'fs/promises';
 import { isDevMode } from './util.js';
 import { getPreloadPath } from './pathresolver.js';
 import { initAudioCapture } from './audiocapture.js';
+import electronUpdater, { type AppUpdater } from 'electron-updater';
 
+export function getAutoUpdater(): AppUpdater {
+   // Using destructuring to access autoUpdater due to the CommonJS module of 'electron-updater'.
+   // It is a workaround for ESM compatibility issues, see https://github.com/electron-userland/electron-builder/issues/7976.
+   const { autoUpdater } = electronUpdater;
+   return autoUpdater;
+}
 const LIMITS_FILE = path.join(app.getPath('userData'), 'limits.json');
 const SOUNDS_DIR = path.join(app.getPath('userData'), 'sounds');
 
@@ -69,6 +76,8 @@ function createTray(iconPath: string) {
 }
 
 app.on('ready', () => {
+  getAutoUpdater().checkForUpdatesAndNotify();
+
   const iconPath = isDevMode() 
     ? path.join(app.getAppPath(), 'desktopIcon.png')
     : path.join(app.getAppPath(), '..', 'desktopIcon.png');
