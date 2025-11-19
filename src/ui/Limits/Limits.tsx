@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, memo } from "react";
+import { createPortal } from "react-dom";
 import "./Limits.css";
 import RadialSlider from "../RadialSlider/RadialSlider";
 
@@ -6,9 +7,21 @@ interface LimitsProps {
     limitData: LimitData;
     onUpdate: (updatedLimit: LimitData) => void;
     onDelete: (limitId: string) => void;
+    onDragStart?: (id: string) => void;
+    onDragEnd?: () => void;
+    onDragOver?: (id: string) => void;
+    isDragging?: boolean;
 }
 
-const Limits = memo(function Limits({ limitData, onUpdate, onDelete }: LimitsProps) {
+const Limits = memo(function Limits({ 
+    limitData, 
+    onUpdate, 
+    onDelete, 
+    onDragStart, 
+    onDragEnd, 
+    onDragOver,
+    isDragging = false 
+}: LimitsProps) {
     const [limitName, setLimitName] = useState(limitData.name);
     const [limitActive, setLimitActive] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -173,9 +186,38 @@ const Limits = memo(function Limits({ limitData, onUpdate, onDelete }: LimitsPro
         }
     };
 
+    const handleDragStart = (e: React.DragEvent) => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', limitData.id);
+        if (onDragStart) {
+            onDragStart(limitData.id);
+        }
+    };
+
+    const handleDragEnd = () => {
+        if (onDragEnd) {
+            onDragEnd();
+        }
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (onDragOver) {
+            onDragOver(limitData.id);
+        }
+    };
+
     return (
-        <div className="limit-item">
+        <div 
+            className={`limit-item ${isDragging ? 'dragging' : ''}`}
+            draggable={true}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+        >
             <div className="limit-content">
+                <span className="drag-handle" title="Drag to reorder">⋮⋮</span>
                 <span className="limit-name">{limitName}</span>
                 <span className="limit-time">{limitTimeframeFrom} - {limitTimeframeTo}</span>
 
@@ -187,10 +229,13 @@ const Limits = memo(function Limits({ limitData, onUpdate, onDelete }: LimitsPro
                 <span className="limit-delete" onClick={handleDelete}>Delete</span>
             </div>
 
-            {isModalOpen && (
-                <div className="modal-overlay">
+            {isModalOpen && createPortal(
+                <div className="modal-overlay" onClick={handleCancel}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <h2>Edit Limit</h2>
+                        <div className="modal-header">
+                            <h2>Edit Limit</h2>
+                            <button className="close-button" onClick={handleCancel}>&times;</button>
+                        </div>
                         
                         <div className="form-group-flex">
                             <div className="form-group-name">
@@ -291,7 +336,8 @@ const Limits = memo(function Limits({ limitData, onUpdate, onDelete }: LimitsPro
                             <button onClick={handleCancel} className="btn-cancel">Cancel</button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

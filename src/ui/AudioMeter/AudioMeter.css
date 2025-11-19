@@ -1,153 +1,256 @@
+/* ============================================
+   AUDIO METER - CONTAINER
+   ============================================ */
 .audio-meter-container {
-    position: relative;
-    display: inline-block;
-    border: 1px solid #979797;
-    border-radius: 4px;
-    overflow: hidden;
-    background-color: #1a1a1a;
+  position: relative;
+  display: inline-block;
+  border: 1px solid var(--color-border, #979797);
+  border-radius: var(--radius-md, 4px);
+  overflow: hidden;
+  background-color: var(--color-bg-secondary, #1a1a1a);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-/* Segmented background zones */
+
+/* ============================================
+   AUDIO METER - BACKGROUND SEGMENTS
+   ============================================ */
 .audio-meter-segments {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .meter-segment {
-    height: 100%;
+  height: 100%;
+  transition: opacity var(--transition-slow, 0.3s ease);
 }
 
+/* Color zones with subtle gradients */
 .green-zone {
-    background-color: rgba(76, 175, 80, 0.15);
+  background: linear-gradient(
+    to right,
+    rgba(76, 175, 80, 0.1),
+    rgba(76, 175, 80, 0.18)
+  );
 }
 
 .yellow-zone {
-    background-color: rgba(255, 235, 59, 0.15);
+  background: linear-gradient(
+    to right,
+    rgba(255, 235, 59, 0.12),
+    rgba(255, 235, 59, 0.2)
+  );
 }
 
 .orange-zone {
-    background-color: rgba(255, 152, 0, 0.15);
+  background: linear-gradient(
+    to right,
+    rgba(255, 152, 0, 0.15),
+    rgba(255, 152, 0, 0.22)
+  );
 }
 
 .red-zone {
-    background-color: rgba(255, 0, 0, 0.15);
+  background: linear-gradient(
+    to right,
+    rgba(255, 0, 0, 0.15),
+    rgba(255, 0, 0, 0.25)
+  );
 }
 
-/* Active fill that overlays the segments */
+
+/* ============================================
+   AUDIO METER - ACTIVE FILL
+   ============================================ */
 .audio-meter-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    transition: width 0.05s linear, background-color 0.15s ease;
-    box-shadow: 2px 0 8px rgba(255, 255, 255, 0.3);
-    will-change: width;
-    transform: translateZ(0); /* Force GPU acceleration */
-    backface-visibility: hidden; /* Optimize rendering */
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  transition: width 0.05s linear, background-color var(--transition-base, 0.15s ease);
+  box-shadow: 2px 0 10px rgba(255, 255, 255, 0.3),
+              inset -1px 0 2px rgba(255, 255, 255, 0.2);
+  will-change: width;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-/* Peak indicator - thin vertical line showing highest level in time window */
+
+/* ============================================
+   AUDIO METER - PEAK INDICATOR
+   ============================================ */
 .audio-meter-peak {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 2px;
-    background-color: #ff3333;
-    box-shadow: 0 0 8px rgba(255, 51, 51, 0.8), 0 0 4px rgba(255, 51, 51, 0.6);
-    transform: translateX(-1px) translateZ(0); /* Center the line and force GPU acceleration */
-    transition: left 0.3s ease-out;
-    z-index: 10;
-    pointer-events: none;
-    will-change: left;
-    backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 51, 51, 0.9),
+    rgba(255, 51, 51, 1),
+    rgba(255, 51, 51, 0.9)
+  );
+  box-shadow: 
+    0 0 10px rgba(255, 51, 51, 0.9),
+    0 0 6px rgba(255, 51, 51, 0.7),
+    inset 0 0 2px rgba(255, 255, 255, 0.5);
+  transform: translateX(-1.5px) translateZ(0);
+  transition: left var(--transition-slower, 0.3s ease-out);
+  z-index: 10;
+  pointer-events: none;
+  will-change: left;
+  backface-visibility: hidden;
+  border-radius: 2px;
+}
+
+.audio-meter-peak::before,
+.audio-meter-peak::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 51, 51, 1) 0%,
+    rgba(255, 51, 51, 0.8) 60%,
+    rgba(255, 51, 51, 0) 100%
+  );
+  border-radius: var(--radius-full, 50%);
+  box-shadow: 0 0 8px rgba(255, 51, 51, 0.95);
 }
 
 .audio-meter-peak::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -2px;
-    width: 6px;
-    height: 6px;
-    background-color: #ff3333;
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(255, 51, 51, 0.9);
+  top: -4px;
 }
 
 .audio-meter-peak::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: -2px;
-    width: 6px;
-    height: 6px;
-    background-color: #ff3333;
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(255, 51, 51, 0.9);
+  bottom: -4px;
 }
 
+
+/* ============================================
+   AUDIO METER - GRADUATIONS
+   ============================================ */
 .audio-meter-graduations {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
 }
 
 .graduation-mark {
-    width: 1px;
-    height: 60%;
-    background-color: rgba(255, 255, 255, 0.2);
+  width: 1px;
+  height: 60%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 80%,
+    transparent 100%
+  );
+  opacity: 0.8;
 }
 
-/* Debug controls */
+
+/* ============================================
+   AUDIO METER - DEBUG CONTROLS
+   ============================================ */
 .audio-meter-debug {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 10px);
+  margin-top: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 8px);
+  background-color: var(--color-bg-tertiary, #1e1e1e);
+  border-radius: var(--radius-md, 4px);
+  border: 1px solid var(--color-border-light, #333);
 }
 
 .debug-slider {
-    flex: 1;
-    height: 6px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: #979797;
-    outline: none;
-    border-radius: 3px;
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(
+    to right,
+    var(--color-border, #979797) 0%,
+    var(--color-border, #979797) 100%
+  );
+  outline: none;
+  border-radius: var(--radius-sm, 3px);
+  cursor: pointer;
+  transition: background var(--transition-base, 0.15s ease);
+}
+
+.debug-slider:hover {
+  background: linear-gradient(
+    to right,
+    var(--color-success, #4caf50) 0%,
+    var(--color-border, #979797) 100%
+  );
 }
 
 .debug-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    background: #4caf50;
-    cursor: pointer;
-    border-radius: 50%;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--color-success, #4caf50);
+  cursor: pointer;
+  border-radius: var(--radius-full, 50%);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform var(--transition-fast, 0.1s ease);
+}
+
+.debug-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.debug-slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
 }
 
 .debug-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    background: #4caf50;
-    cursor: pointer;
-    border-radius: 50%;
-    border: none;
+  width: 18px;
+  height: 18px;
+  background: var(--color-success, #4caf50);
+  cursor: pointer;
+  border-radius: var(--radius-full, 50%);
+  border: none;
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform var(--transition-fast, 0.1s ease);
+}
+
+.debug-slider::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+
+.debug-slider::-moz-range-thumb:active {
+  transform: scale(0.95);
 }
 
 .debug-value {
-    min-width: 45px;
-    text-align: right;
-    font-size: 14px;
-    color: #d4d4d4;
+  min-width: 50px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary, #d4d4d4);
+  font-family: 'Consolas', 'Monaco', monospace;
+  background-color: var(--color-bg-secondary, #1a1a1a);
+  padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+  border-radius: var(--radius-sm, 3px);
+  border: 1px solid var(--color-border-light, #333);
 }

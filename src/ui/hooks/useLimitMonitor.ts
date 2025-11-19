@@ -1,31 +1,29 @@
 import { useEffect, useRef } from 'react';
+import { AudioController } from '../AudioController';
 
 interface UseLimitMonitorProps {
   limits: LimitData[];
-  audioLevel: number;
 }
 
-export function useLimitMonitor({ limits, audioLevel }: UseLimitMonitorProps) {
+export function useLimitMonitor({ limits }: UseLimitMonitorProps) {
   const lastTriggeredRef = useRef<Map<string, number>>(new Map());
   const isPlayingRef = useRef<Map<string, boolean>>(new Map());
   const cooldownMs = 2000; // 2 second cooldown between plays for same limit
   const limitsRef = useRef(limits);
-  const audioLevelRef = useRef(audioLevel);
   
   // Update refs without causing re-render
   useEffect(() => {
     limitsRef.current = limits;
   }, [limits]);
 
-  useEffect(() => {
-    audioLevelRef.current = audioLevel;
-  }, [audioLevel]);
-
-  // Check limits on an interval instead of on every audio level change
+  // Check limits on an interval
   useEffect(() => {
     const checkLimits = () => {
+      const audioController = AudioController.getInstance();
+      if (!audioController.isActive()) return;
+
+      const currentAudioLevel = audioController.getAudioLevel();
       const now = Date.now();
-      const currentAudioLevel = audioLevelRef.current;
       
       const currentTime = new Date().getHours() * 60 + new Date().getMinutes();
       const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -102,7 +100,7 @@ export function useLimitMonitor({ limits, audioLevel }: UseLimitMonitorProps) {
       }
     };
 
-    // Run check every 250ms instead of on every audio level change
+    // Run check every 250ms
     const interval = setInterval(checkLimits, 250);
     
     return () => clearInterval(interval);

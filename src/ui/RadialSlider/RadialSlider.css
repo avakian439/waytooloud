@@ -1,96 +1,131 @@
+/* ============================================
+   RADIAL SLIDER - CONTAINER
+   ============================================ */
 .radial-slider-container {
-    position: relative;
-    display: inline-block;
-    user-select: none;
-    padding: 10px; /* Add padding to prevent handle cutoff at corners */
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  padding: var(--spacing-md, 10px);
 }
 
+
+/* ============================================
+   RADIAL SLIDER - SVG
+   ============================================ */
 .radial-slider-svg {
-    display: block;
-    transform: rotate(-90deg); /* Rotate so 0 degrees is at the top */
-    overflow: visible; /* Ensure handle isn't clipped */
+  display: block;
+  transform: rotate(-90deg);
+  overflow: visible;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
 }
 
+
+/* ============================================
+   RADIAL SLIDER - HANDLE
+   ============================================ */
 .radial-slider-handle {
-    cursor: grab;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    transition: r 0.1s ease;
+  cursor: grab;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+  transition: r var(--transition-fast, 0.1s ease),
+              filter var(--transition-base, 0.15s ease);
 }
 
 .radial-slider-handle:hover {
-    r: 14;
+  r: 15;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
 }
 
 .radial-slider-handle:active {
-    cursor: grabbing;
+  cursor: grabbing;
+  r: 13;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
+
+/* ============================================
+   RADIAL SLIDER - VALUE DISPLAY
+   ============================================ */
 .radial-slider-value {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: auto; /* Allow clicks on buttons */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs, 4px);
 }
 
 .value-display {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xs, 4px);
 }
 
 .value-number {
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-    line-height: 1;
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary, #fff);
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.5px;
 }
 
 .value-label {
-    display: block;
-    font-size: 10px;
-    color: #888;
-    margin-top: 2px;
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-muted, #888);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Increment/Decrement buttons inside the ring */
+
+/* ============================================
+   RADIAL SLIDER - CONTROLS
+   ============================================ */
 .radial-slider-controls {
-    display: flex;
-    gap: 3px;
-    justify-content: center;
+  display: flex;
+  gap: var(--spacing-xs, 3px);
+  justify-content: center;
+  margin-top: var(--spacing-xs, 4px);
 }
 
 .radial-slider-btn {
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    background-color: #1a1a1a;
-    color: #aaa;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    transition: all 0.15s ease;
-    line-height: 1;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-sm, 3px);
+  background-color: var(--color-bg-secondary, #1a1a1a);
+  color: var(--color-text-muted, #aaa);
+  border: 1px solid var(--color-border-light, #333);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all var(--transition-base, 0.15s ease);
+  line-height: 1;
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .radial-slider-btn:hover {
-    background-color: #2a2a2a;
-    border-color: #4caf50;
-    color: #4caf50;
+  background-color: var(--color-bg-hover, #2a2a2a);
+  border-color: var(--color-success, #4caf50);
+  color: var(--color-success, #4caf50);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 .radial-slider-btn:active {
-    background-color: #4caf50;
-    color: #fff;
-    transform: scale(0.9);
+  background-color: var(--color-success, #4caf50);
+  color: #fff;
+  transform: scale(0.92) translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }

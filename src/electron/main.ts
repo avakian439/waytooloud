@@ -18,6 +18,7 @@ const SOUNDS_DIR = path.join(app.getPath('userData'), 'sounds');
 let tray: Tray | null = null;
 let mainWindow: BrowserWindow | null = null;
 let isQuitting = false;
+let hasShownTrayNotification = false; // Only show notification once per session
 
 // Register custom protocol before app is ready
 app.whenReady().then(() => {
@@ -75,14 +76,106 @@ function createTray(iconPath: string) {
   });
 }
 
-app.on('ready', () => {
-  getAutoUpdater().checkForUpdatesAndNotify();
+function setupAutoUpdater() {
+  const autoUpdater = getAutoUpdater();
+  
+  // Only check for updates in production
+  if (isDevMode()) {
+    console.log('Auto-updater disabled in development mode');
+    return;
+  }
 
+  // Configure auto-updater
+  autoUpdater.autoDownload = false; // Don't auto-download, ask user first
+  autoUpdater.autoInstallOnAppQuit = true;
+
+  autoUpdater.on('checking-for-update', () => {
+    console.log('Checking for updates...');
+  });
+
+  autoUpdater.on('update-available', (info) => {
+    console.log('Update available:', info.version);
+    
+    if (mainWindow) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: 'Update Available',
+        message: `A new version (${info.version}) is available!`,
+        detail: 'Would you like to download it now? The update will be installed when you close the app.',
+        buttons: ['Download', 'Later'],
+        defaultId: 0,
+        cancelId: 1
+      }).then((result) => {
+        if (result.response === 0) {
+          autoUpdater.downloadUpdate();
+        }
+      });
+    }
+  });
+
+  autoUpdater.on('update-not-available', () => {
+    console.log('No updates available');
+  });
+
+  autoUpdater.on('download-progress', (progressObj) => {
+    const message = `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}%`;
+    console.log(message);
+    
+    if (mainWindow) {
+      mainWindow.setProgressBar(progressObj.percent / 100);
+    }
+  });
+
+  autoUpdater.on('update-downloaded', (info) => {
+    console.log('Update downloaded:', info.version);
+    
+    if (mainWindow) {
+      mainWindow.setProgressBar(-1); // Remove progress bar
+      
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: 'Update Ready',
+        message: 'Update downloaded successfully!',
+        detail: 'The update will be installed when you close the application. Would you like to restart now?',
+        buttons: ['Restart Now', 'Later'],
+        defaultId: 0,
+        cancelId: 1
+      }).then((result) => {
+        if (result.response === 0) {
+          isQuitting = true;
+          autoUpdater.quitAndInstall();
+        }
+      });
+    }
+  });
+
+  autoUpdater.on('error', (error) => {
+    console.error('Auto-updater error:', error);
+    
+    if (mainWindow) {
+      mainWindow.setProgressBar(-1); // Remove progress bar on error
+    }
+  });
+
+  // Check for updates on startup
+  autoUpdater.checkForUpdates();
+  
+  // Check for updates every 4 hours
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 4 * 60 * 60 * 1000);
+}
+
+app.on('ready', () => {
   const iconPath = isDevMode() 
     ? path.join(app.getAppPath(), 'desktopIcon.png')
     : path.join(app.getAppPath(), '..', 'desktopIcon.png');
 
   mainWindow = new BrowserWindow({
+    width: 600,
+    height: 800,
+    minWidth: 600,
+    minHeight: 500,
     icon: iconPath,
     webPreferences: {
       preload: getPreloadPath(),
@@ -98,11 +191,24 @@ app.on('ready', () => {
     if (!isQuitting) {
       event.preventDefault();
       mainWindow?.hide();
+      
+      // Show tray balloon the first time the app is minimized to tray
+      if (!hasShownTrayNotification && tray) {
+        tray.displayBalloon({
+          title: 'WayTooLoud',
+          content: 'App minimized to system tray. Audio monitoring continues in the background.',
+          icon: iconPath
+        });
+        hasShownTrayNotification = true;
+      }
     }
   });
   
   // Initialize audio capture handlers
   initAudioCapture(mainWindow);
+  
+  // Setup auto-updater after window is created
+  setupAutoUpdater();
   
   if (isDevMode()) {
     mainWindow.loadURL('http://localhost:3000');
