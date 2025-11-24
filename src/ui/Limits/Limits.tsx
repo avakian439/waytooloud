@@ -52,7 +52,10 @@ const Limits = memo(function Limits({
 
         // Check if current time is within the timeframe
         let isTimeActive = false;
-        if (fromTime <= toTime) {
+        if (fromTime === 0 && toTime === 0) {
+            // Special case: both set to midnight means whole day
+            isTimeActive = true;
+        } else if (fromTime <= toTime) {
             // Normal case: e.g., 09:00 to 17:00
             isTimeActive = currentTime >= fromTime && currentTime <= toTime;
         } else {
