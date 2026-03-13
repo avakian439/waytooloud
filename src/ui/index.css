@@ -6,26 +6,26 @@
   --color-primary: #646cff;
   --color-primary-hover: #535bf2;
   --color-primary-light: #747bff;
-  
+
   --color-success: #4caf50;
   --color-success-hover: #45a049;
   --color-warning: #ff9800;
   --color-danger: #da190b;
   --color-danger-hover: #b01508;
-  
+
   --color-text-primary: rgba(255, 255, 255, 0.87);
   --color-text-secondary: #d4d4d4;
   --color-text-muted: #888;
   --color-text-disabled: #666;
-  
+
   --color-bg-primary: #242424;
   --color-bg-secondary: #1a1a1a;
   --color-bg-tertiary: #1e1e1e;
   --color-bg-hover: #2a2a2a;
-  
+
   --color-border: #979797;
   --color-border-light: #333;
-  
+
   /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -33,31 +33,31 @@
   --spacing-lg: 16px;
   --spacing-xl: 20px;
   --spacing-2xl: 24px;
-  
+
   /* Border Radius */
   --radius-sm: 3px;
   --radius-md: 4px;
   --radius-lg: 8px;
   --radius-xl: 12px;
   --radius-full: 50%;
-  
+
   /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 8px rgba(255, 255, 255, 0.3);
-  
+
   /* Transitions */
   --transition-fast: 0.1s ease;
   --transition-base: 0.15s ease;
   --transition-slow: 0.25s ease;
   --transition-slower: 0.3s ease;
-  
+
   /* Typography */
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
+
   /* Rendering */
   color-scheme: light dark;
   color: var(--color-text-primary);
@@ -75,12 +75,12 @@
     --color-text-secondary: #333;
     --color-text-muted: #666;
     --color-text-disabled: #999;
-    
+
     --color-bg-primary: #ffffff;
     --color-bg-secondary: #f9f9f9;
     --color-bg-tertiary: #f5f5f5;
     --color-bg-hover: #e4e4e4;
-    
+
     --color-border: #ddd;
     --color-border-light: #eee;
   }
@@ -97,7 +97,6 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }

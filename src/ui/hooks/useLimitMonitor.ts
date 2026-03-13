@@ -76,7 +76,13 @@ export function useLimitMonitor({ limits }: UseLimitMonitorProps) {
               }
               
               const audio = new Audio(audioPath);
-              
+              const outputDeviceId = AudioController.getInstance().getOutputDevice();
+              if (outputDeviceId && typeof (audio as any).setSinkId === 'function') {
+                (audio as any).setSinkId(outputDeviceId).catch((error: any) => {
+                  console.warn('Unable to set audio output device:', error);
+                });
+              }
+
               // Clear playing flag when sound ends or errors
               audio.addEventListener('ended', () => {
                 isPlayingRef.current.set(limit.id, false);

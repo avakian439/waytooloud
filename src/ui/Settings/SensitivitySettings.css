@@ -198,6 +198,23 @@
     0 0 0 5px var(--color-success, rgba(76, 175, 80, 0.5));
 }
 
+.setting-group select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  background: var(--color-bg-secondary, rgba(0, 0, 0, 0.2));
+  border: 1px solid var(--color-border-light, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-sm, 6px);
+  color: var(--color-text-primary, #fff);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+.setting-group select:focus {
+  outline: none;
+  border-color: var(--color-success, #4caf50);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
+}
+
 .setting-slider::-webkit-slider-thumb:active {
   transform: scale(1.05);
 }

@@ -14,7 +14,14 @@
         "preview": "vite preview",
         "transpile:electron": "tsc -p src/electron/tsconfig.json",
         "dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64",
-        "publish": "npm run transpile:electron && npm run build && electron-builder --win --x64 -p always"
+        "dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64",
+        "dist:mac": "npm run transpile:electron && npm run build && electron-builder --mac --x64",
+        "dist:win:zip": "npm run transpile:electron && npm run build && electron-builder --win --x64 --target=zip",
+        "dist:linux:zip": "npm run transpile:electron && npm run build && electron-builder --linux --x64 --target=zip",
+        "dist:mac:zip": "npm run transpile:electron && npm run build && electron-builder --mac --x64 --target=zip",
+        "publish:win": "npm run transpile:electron && npm run build && electron-builder --win --x64 --publish always",
+        "publish:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64 --publish always",
+        "publish:mac": "npm run transpile:electron && npm run build && electron-builder --mac --x64 --publish always"
     },
     "dependencies": {
         "electron-updater": "^6.6.2",

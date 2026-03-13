@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import Limits from './Limits/Limits.tsx'
 import AudioMeter from './AudioMeter/AudioMeter.tsx'
-import { useAudioMonitoring } from './Hooks/useAudioMonitoring.ts'
-import { useLimitMonitor } from './Hooks/useLimitMonitor.ts'
+import { useAudioMonitoring } from './hooks/useAudioMonitoring.ts'
+import { useLimitMonitor } from './hooks/useLimitMonitor.ts'
 import { SensitivitySettings } from './Settings/SensitivitySettings.tsx'
 
 export function App() {
@@ -44,11 +44,11 @@ export function App() {
   }, []);
 
   const updateLimit = async (updatedLimit: LimitData) => {
-    const updatedLimits = limits.map(limit => 
+    const updatedLimits = limits.map(limit =>
       limit.id === updatedLimit.id ? updatedLimit : limit
     );
     setLimits(updatedLimits);
-    
+
     // Save to file
     if (window.electron) {
       await window.electron.saveLimits(updatedLimits);
@@ -58,7 +58,7 @@ export function App() {
   const deleteLimit = async (limitId: string) => {
     const updatedLimits = limits.filter(limit => limit.id !== limitId);
     setLimits(updatedLimits);
-    
+
     // Save to file
     if (window.electron) {
       await window.electron.saveLimits(updatedLimits);
@@ -75,10 +75,10 @@ export function App() {
       soundFile: '',
       dbThreshold: 70
     };
-    
+
     const updatedLimits = [...limits, newLimit];
     setLimits(updatedLimits);
-    
+
     // Save to file
     if (window.electron) {
       await window.electron.saveLimits(updatedLimits);
@@ -95,17 +95,17 @@ export function App() {
 
   const handleDragOver = (id: string) => {
     if (draggedId && draggedId !== id) {
-      
+
       // Reorder the array
       const draggedIndex = limits.findIndex(l => l.id === draggedId);
       const targetIndex = limits.findIndex(l => l.id === id);
-      
+
       if (draggedIndex !== -1 && targetIndex !== -1) {
         const newLimits = [...limits];
         const [removed] = newLimits.splice(draggedIndex, 1);
         newLimits.splice(targetIndex, 0, removed);
         setLimits(newLimits);
-        
+
         // Save to file
         if (window.electron) {
           window.electron.saveLimits(newLimits);
@@ -121,7 +121,7 @@ export function App() {
   return (
     <div className="app-container">
       <div className="app-header" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px', width: '100%' }}>
-        <button 
+        <button
           onClick={() => setShowSettings(true)}
           style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#666' }}
           title="Sensitivity Settings"
@@ -137,7 +137,7 @@ export function App() {
       <div className="demo-section">
         <AudioMeter width="100%" height="20px" />
       </div>
-      
+
       <div className="button-container">
         <button onClick={addNewLimit}>
           Add New Limit
@@ -149,7 +149,7 @@ export function App() {
           <div className="no-limits-message">No limits configured. Click "Add New Limit" to create one.</div>
         ) : (
           limits.map(limit => (
-            <Limits 
+            <Limits
               key={limit.id}
               limitData={limit}
               onUpdate={updateLimit}
@@ -163,9 +163,9 @@ export function App() {
         )}
       </div>
 
-      <SensitivitySettings 
-        isOpen={showSettings} 
-        onClose={() => setShowSettings(false)} 
+      <SensitivitySettings
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
       />
     </div>
   );
