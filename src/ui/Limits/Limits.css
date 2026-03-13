@@ -6,11 +6,9 @@
   border: 1px solid var(--color-border, #979797);
   border-radius: var(--radius-md, 4px);
   margin-bottom: var(--spacing-md, 12px);
-  background: linear-gradient(
-    135deg,
-    var(--color-bg-secondary, rgba(26, 26, 26, 0.8)) 0%,
-    var(--color-bg-secondary, rgba(26, 26, 26, 0.6)) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-bg-secondary, rgba(26, 26, 26, 0.8)) 0%,
+      var(--color-bg-secondary, rgba(26, 26, 26, 0.6)) 100%);
   transition: all var(--transition-base, 0.2s ease);
   box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.3));
   cursor: grab;
@@ -32,11 +30,9 @@
   border-color: var(--color-primary, #646cff);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  background: linear-gradient(
-    135deg,
-    var(--color-bg-hover, rgba(42, 42, 42, 0.8)) 0%,
-    var(--color-bg-secondary, rgba(26, 26, 26, 0.6)) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-bg-hover, rgba(42, 42, 42, 0.8)) 0%,
+      var(--color-bg-secondary, rgba(26, 26, 26, 0.6)) 100%);
 }
 
 .limit-item.dragging:hover {
@@ -189,6 +185,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -217,6 +214,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -438,13 +436,13 @@
   border: 1px solid var(--color-border-light, #333);
 }
 
-#timeframe-group > label {
+#timeframe-group>label {
   margin-top: var(--spacing-xs, 5px);
   font-weight: 600;
   color: var(--color-text-secondary, #d4d4d4);
 }
 
-#timeframe-group > input {
+#timeframe-group>input {
   height: 24px;
   padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
   border: 1px solid var(--color-border, #979797);
@@ -455,11 +453,11 @@
   transition: all var(--transition-base, 0.2s ease);
 }
 
-#timeframe-group > input:hover {
+#timeframe-group>input:hover {
   border-color: var(--color-primary, #646cff);
 }
 
-#timeframe-group > input:focus {
+#timeframe-group>input:focus {
   outline: none;
   border-color: var(--color-primary, #646cff);
   box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.1);
@@ -612,7 +610,7 @@
   border: 1px solid var(--color-border, #979797);
   border-radius: var(--radius-md, 4px);
   background-color: var(--color-bg-hover, #a09d9c);
-  color: var(white);
+  color: white;
   cursor: pointer;
   font-size: 18px;
   font-weight: 700;
