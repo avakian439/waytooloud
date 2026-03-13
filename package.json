@@ -1,7 +1,7 @@
 {
     "name": "waytooloud",
     "author": "avakian439",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "repository": "github:avakian439/waytooloud.git",
     "type": "module",
     "main": "dist-electron/main.js",
@@ -57,16 +57,34 @@
             "./desktopIcon.png"
         ],
         "icon": "./desktopIcon.png",
+        "publish": [
+            {
+                "provider": "github"
+            }
+        ],
         "win": {
             "target": [
                 "portable",
                 "msi"
+            ]
+        },
+        "linux": {
+            "target": [
+                "AppImage"
             ],
             "publish": [
                 {
-                    "provider": "github",
-                    "owner": "avakian439",
-                    "repo": "waytooloud"
+                    "provider": "github"
+                }
+            ]
+        },
+        "mac": {
+            "target": [
+                "dmg"
+            ],
+            "publish": [
+                {
+                    "provider": "github"
                 }
             ]
         }
