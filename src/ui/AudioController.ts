@@ -28,11 +28,17 @@ export class AudioController {
     try {
       console.log('Starting audio monitoring...');
 
-      // Request microphone access
+      // Request microphone access.
+      const audioConstraints: MediaTrackConstraints = {
+        autoGainControl: false,
+        echoCancellation: false,
+        noiseSuppression: false,
+        // If a specific input device is selected, request it explicitly
+        ...(this.inputDeviceId ? { deviceId: { exact: this.inputDeviceId } } : {}),
+      };
+
       const constraints: MediaStreamConstraints = {
-        audio: this.inputDeviceId
-          ? { deviceId: { exact: this.inputDeviceId } }
-          : true,
+        audio: audioConstraints,
       };
 
       this.stream = await navigator.mediaDevices.getUserMedia(constraints);
