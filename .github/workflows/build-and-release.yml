@@ -84,20 +84,13 @@ jobs:
           name: build-ubuntu-latest
           path: release_artifacts
 
-      - name: Extract artifacts
-        run: |
-          mkdir -p release_assets
-          for f in release_artifacts/*.zip; do
-            unzip -o "$f" -d release_assets
-          done
-
       - name: Create GitHub release (draft)
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           draft: true
-          files: release_assets/**/*
+          files: release_artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
